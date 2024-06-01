@@ -4,7 +4,6 @@ require("dotenv").config();
 exports.verifyuser = async (req, res, next) => {
   const authHeader = req.headers?.authtoken;
 
-  console.log("djsjsjsj((", authHeader);
   if (authHeader) {
     const token = authHeader;
 

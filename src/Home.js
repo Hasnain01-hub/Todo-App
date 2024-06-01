@@ -1,6 +1,6 @@
 import React from "react";
 import Main from "./components/Main/Main";
-import { useSelector } from "react-redux";
+
 const Home = () => {
   React.useEffect(() => {
     let cookieArray = document.cookie.split("; ");

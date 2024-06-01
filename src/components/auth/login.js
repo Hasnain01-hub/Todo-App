@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
+
 const Login = () => {
   const { user } = useSelector((state) => ({ ...state }));
   React.useEffect(() => {
