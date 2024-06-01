@@ -13,18 +13,16 @@ function App() {
     let cookieArray = document.cookie.split("; ");
     var token = cookieArray.find((row) => row.startsWith("jwt="));
     token = token ? token.split("=")[1] : null;
-    // console.log(token);
+
     if (token) {
       getcurrentuser(token)
         .then((res) => {
-          // console.log(res);
           dispatch(
             loginSuccess({
               email: res.data.user.email,
               imgURL: res.data.user.imgURL,
               lastLogin: res.data.user.lastLogin,
               firstName: res.data.user.firstName,
-              // token: token,
             })
           );
         })

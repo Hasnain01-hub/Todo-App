@@ -2,7 +2,6 @@ import React from "react";
 import Main from "./components/Main/Main";
 import { useSelector } from "react-redux";
 const Home = () => {
-  // const { user } = useSelector((state) => state.user);
   React.useEffect(() => {
     let cookieArray = document.cookie.split("; ");
     var token = cookieArray.find((row) => row.startsWith("jwt="));
