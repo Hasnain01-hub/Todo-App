@@ -13,10 +13,11 @@ function App() {
     let cookieArray = document.cookie.split("; ");
     var token = cookieArray.find((row) => row.startsWith("jwt="));
     token = token ? token.split("=")[1] : null;
-
+    console.log(token, "token");
     if (token) {
       getcurrentuser(token)
         .then((res) => {
+          console.log(res);
           dispatch(
             loginSuccess({
               email: res.data.user.email,
@@ -34,7 +35,9 @@ function App() {
       return await axios.get("http://localhost:8000/api/auth/current_user", {
         headers: {
           authtoken: token,
+          Accept: "*/*",
         },
+        withCredentials: true,
       });
     }
   };

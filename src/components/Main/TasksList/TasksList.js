@@ -18,6 +18,7 @@ const TasksList = () => {
         "Content-Type": "application/json",
         authtoken: token,
       },
+      withCredentials: true,
     });
     return storedTasks;
   };

@@ -62,11 +62,12 @@ const ControlPanel = () => {
         "Content-Type": "application/json",
         authtoken: token,
       },
+      withCredentials: true,
     });
     return storedTasks;
   };
   const TasksLeft = list.filter((task) => !task.completed).length;
-  
+
   return (
     <React.Fragment>
       <MediaQuery maxWidth={767}>

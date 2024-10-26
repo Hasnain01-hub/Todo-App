@@ -10,6 +10,7 @@ const getdata = async () => {
       "Content-Type": "application/json",
       authtoken: token,
     },
+    withCredentials: true,
   });
   return storedTasks;
 };
@@ -33,6 +34,7 @@ const ApiCall = () => {
       headers: {
         authtoken: token,
       },
+      withCredentials: true,
     });
   }
   async function postodo(data, token) {
@@ -63,6 +65,7 @@ const ApiCall = () => {
       headers: {
         authtoken: token,
       },
+      withCredentials: true,
     });
   }
   async function updateTodo(task, token) {
@@ -71,8 +74,8 @@ const ApiCall = () => {
       .post(
         "http://localhost:8000/api/updateTodo",
         {
-          _id: task[0]._id,
-          completed: task[0].completed,
+          _id: task._id,
+          completed: task.completed,
         },
         {
           headers: {
@@ -94,6 +97,7 @@ const ApiCall = () => {
       headers: {
         authtoken: token,
       },
+      withCredentials: true,
     });
   }
 
@@ -105,13 +109,24 @@ const TasklistReducer = (state, action) => {
   console.log(state);
   if (action.type === "ADD") {
     console.log(state, action.newTask);
-    var updatedTasks = [...state, action.newTask];
 
-    api.postodo(action.newTask, action.token);
-    console.log(updatedTasks);
+    const updatedTasks = api
+      .postodo(action.newTask, action.token)
+      .then((response) => {
+        action.newTask._id = response.data.id;
+        const newTasksList = [...state, action.newTask];
+        console.log("updatedTasks", newTasksList);
+        return newTasksList;
+      })
+      .catch((error) => {
+        console.error("Failed to post task:", error);
+        return state; // Return current state on error
+      });
+
     return updatedTasks;
   }
   if (action.type === "RMV") {
+    console.log(state);
     const updatedTasks = state.filter((task) => {
       return task._id !== action._id;
     });
@@ -120,19 +135,22 @@ const TasklistReducer = (state, action) => {
     return updatedTasks;
   }
   if (action.type === "IsComplete") {
-    const targetTask = state.find((task) => {
-      return task._id == action._id;
-    });
+    let targetTask = state[0];
+    console.log(state, "state", state.length);
+    if (state.length > 0) {
+      targetTask = state.find((task) => task._id === action._id);
+    }
+    console.log("targetTask is hsre", targetTask);
     console.log(action._id, "state");
     const targetIndex = state.indexOf(targetTask);
     const updatedTasks = [...state];
     console.log(targetIndex, updatedTasks, targetTask, "updatedTasks");
     updatedTasks[targetIndex] = {
-      ...targetTask,
-      completed: !targetTask.completed,
+      ...updatedTasks[targetIndex],
+      completed: !updatedTasks[targetIndex].completed,
     };
 
-    api.updateTodo(updatedTasks, action.token);
+    api.updateTodo(updatedTasks[targetIndex], action.token);
 
     return updatedTasks;
   }
